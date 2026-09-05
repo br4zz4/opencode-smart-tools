@@ -1,6 +1,6 @@
 {
   "name": "@br4zz4/opencode-smart-tools",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "OpenCode TUI plugin with smart tools: /auto sends 'continue' and submits",
   "author": "oporpino <dev@porpi.no>",
   "license": "AGPL-3.0",
