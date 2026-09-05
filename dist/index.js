@@ -368,7 +368,6 @@ function handleError(err, owner = Owner) {
 }
 
 // src/index.tsx
-import { jsx } from "@opentui/solid/jsx-runtime";
 var KV_KEY = "auto-approve-enabled";
 var tui = async (api) => {
   const [enabled, setEnabled] = createSignal(api.kv.get(KV_KEY, false));
@@ -399,21 +398,13 @@ var tui = async (api) => {
         api.kv.set(KV_KEY, next);
         api.ui.toast({
           title: "Auto approve",
-          message: next ? "Enabled \u2014 permissions will be auto-approved" : "Disabled",
-          variant: next ? "success" : "info"
+          message: next ? "ON \u2014 permissions will be auto-approved" : "OFF",
+          variant: next ? "success" : "warning",
+          duration: 3500
         });
       }
     }
   ]);
-  api.slots.register({
-    slots: {
-      home_bottom(ctx) {
-        if (!enabled()) return void 0;
-        const theme = ctx.theme.current;
-        return /* @__PURE__ */ jsx("box", { flexDirection: "row", gap: 1, paddingRight: 2, children: /* @__PURE__ */ jsx("text", { fg: theme.success, children: "\u25C6 AUTO-APPROVE ON" }) });
-      }
-    }
-  });
 };
 var index_default = { id: "smart-tools", tui };
 export {

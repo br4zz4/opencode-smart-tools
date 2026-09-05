@@ -37,26 +37,13 @@ const tui: TuiPlugin = async (api) => {
         api.kv.set(KV_KEY, next)
         api.ui.toast({
           title: "Auto approve",
-          message: next ? "Enabled — permissions will be auto-approved" : "Disabled",
-          variant: next ? "success" : "info",
+          message: next ? "ON — permissions will be auto-approved" : "OFF",
+          variant: next ? "success" : "warning",
+          duration: 3500,
         })
       },
     },
   ])
-
-  api.slots.register({
-    slots: {
-      home_bottom(ctx) {
-        if (!enabled()) return undefined
-        const theme = ctx.theme.current
-        return (
-          <box flexDirection="row" gap={1} paddingRight={2}>
-            <text fg={theme.success}>◆ AUTO-APPROVE ON</text>
-          </box>
-        )
-      },
-    },
-  })
 }
 
 export default { id: "smart-tools", tui }
