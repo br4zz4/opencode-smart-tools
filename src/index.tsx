@@ -24,21 +24,8 @@ type CommandContext = {
   app: { version: string }
 }
 
-import { appendFileSync } from "node:fs"
-
-const log = (_context: CommandContext, message: string) => {
-  try {
-    appendFileSync(
-      `${process.env.HOME}/.local/share/opencode/smart-trace.log`,
-      `${new Date().toISOString()} ${message}\n`,
-    )
-  } catch {}
-}
-
-log(null as unknown as CommandContext, "module evaluated")
 
 const toggleAutoApprove = (context: CommandContext) => {
-  log(context, "run() called")
   try {
     context.keymap.dispatch("permission.mode")
   } catch (error) {
@@ -61,7 +48,6 @@ const toggleAutoApprove = (context: CommandContext) => {
 const smartTools = {
   id: "smart-tools",
   setup(context: CommandContext) {
-    log(context, `setup ok app=${context?.app?.version ?? "?"} keys=${Object.keys(context).join(",")}`)
     context.keymap.layer(() => ({
       mode: "global",
       priority: 10,
