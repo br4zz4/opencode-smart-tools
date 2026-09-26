@@ -1,5 +1,18 @@
 // src/index.tsx
+import { appendFileSync } from "node:fs";
+var log = (_context, message) => {
+  try {
+    appendFileSync(
+      `${process.env.HOME}/.local/share/opencode/smart-trace.log`,
+      `${(/* @__PURE__ */ new Date()).toISOString()} ${message}
+`
+    );
+  } catch {
+  }
+};
+log(null, "module evaluated");
 var toggleAutoApprove = (context) => {
+  log(context, "run() called");
   try {
     context.keymap.dispatch("permission.mode");
   } catch (error) {
@@ -21,6 +34,7 @@ var toggleAutoApprove = (context) => {
 var smartTools = {
   id: "smart-tools",
   setup(context) {
+    log(context, `setup ok app=${context?.app?.version ?? "?"} keys=${Object.keys(context).join(",")}`);
     context.keymap.layer(() => ({
       mode: "global",
       priority: 10,

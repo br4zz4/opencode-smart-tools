@@ -7,6 +7,6 @@ await build({
   outfile: "dist/index.js",
   jsx: "automatic",
   jsxImportSource: "@opentui/solid",
-  external: ["@opentui/solid/jsx-runtime", "@opencode-ai/plugin"],
+  external: ["@opentui/solid/jsx-runtime", "@opencode-ai/plugin", "node:fs"],
   target: "esnext",
 })
