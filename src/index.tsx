@@ -1,24 +1,70 @@
-import type { TuiPlugin } from "@opencode-ai/plugin/tui"
+/**
+ * Smart Tools: /auto — toggle auto-approve permissions.
+ *
+ * Migrated to the OpenCode v2 TUI plugin API:
+ * `setup(context)` + `context.keymap.layer` with `slash` commands
+ * (replaces the legacy `api.command.register` API, removed in v2).
+ */
 
-const tui: TuiPlugin = async (api) => {
-  api.command?.register(() => [
-    {
-      title: "Auto approve",
-      value: "auto",
-      description: "Toggle auto-approve permissions (auto mode)",
-      category: "Smart Tools",
-      slash: { name: "auto" },
-      onSelect: () => {
-        api.command?.trigger("permission.mode")
-        api.ui.toast({
-          title: "Auto approve",
-          message: "Auto-approve mode toggled",
-          variant: "info",
-          duration: 2500,
-        })
-      },
-    },
-  ])
+type CommandContext = {
+  keymap: {
+    layer: (cb: () => unknown) => () => void
+    dispatch: (name: string, input?: string) => unknown
+  }
+  ui: {
+    toast: {
+      show: (input: {
+        title?: string
+        message: string
+        variant?: string
+        duration?: number
+      }) => unknown
+    }
+  }
+  app: { version: string }
 }
 
-export default { id: "smart-tools", tui }
+const toggleAutoApprove = (context: CommandContext) => {
+  try {
+    context.keymap.dispatch("permission.mode")
+  } catch (error) {
+    context.ui.toast.show({
+      title: "Auto approve",
+      message: `Failed to toggle: ${String(error)}`,
+      variant: "error",
+      duration: 2500,
+    })
+    return
+  }
+  context.ui.toast.show({
+    title: "Auto approve",
+    message: "Auto-approve mode toggled",
+    variant: "info",
+    duration: 2500,
+  })
+}
+
+const smartTools = {
+  id: "smart-tools",
+  setup(context: CommandContext) {
+    context.keymap.layer(() => ({
+      mode: "global",
+      priority: 10,
+      commands: [
+        {
+          id: "smart-tools.auto",
+          title: "Auto approve",
+          group: "Smart Tools",
+          description: "Toggle auto-approve permissions (auto mode)",
+          palette: true,
+          slash: { name: "auto" },
+          suggested: true,
+          run: () => toggleAutoApprove(context),
+        },
+      ],
+      bindings: ["smart-tools.auto"],
+    }))
+  },
+}
+
+export default smartTools
